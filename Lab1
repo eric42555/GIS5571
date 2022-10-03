@@ -2,18 +2,21 @@ https://docs.google.com/document/d/1Th8FfARw9kuo32sdaUecOrAraYKMBbZg/edit?usp=sh
 
 activate arcpy
 import arcpy
+import requests 
+arcpy.env.workspace = r'G:\My Drive\GIS 5571\lab1\lab1.gdb'
 
-Bring in data 
 
-Geospatial Commons 
+#Bring in data 
+
+#Geospatial Commons 
 !curl -O https://resources.gisdata.mn.gov/pub/gdrs/data/pub/us_mn_state_dot/bdry_state/shp_bdry_state.zip "Boundary_zip"
 !curl -O https://resources.gisdata.mn.gov/pub/gdrs/data/pub/us_mn_state_mngeo/health_facility_hospitals/shp_health_facility_hospitals.zip "Hospital_zip"
 
-NDAWN
+#NDAWN
 !curl -O https://ndawn.ndsu.nodak.edu/station-info.html?station=26.csv "Station_28"
 !curl -O https://ndawn.ndsu.nodak.edu/station-info.html?station=96.csv "Station_96"
 
-Google Places 
+#Google Places 
 
 API Key: AIzaSyDzj4ZeQln4oxDyR3off-JzlqcU77K5Vj8 
 
@@ -32,13 +35,13 @@ final_goog_path
 goog_req_obj = requests.get(final_goog_path)
 print(goog_req_obj.text)
 
-Transform Code (used for all data, change layer name/location)
+#Transform Code (used for all data, change layer name/location)
 arcpy.management.ConvertCoordinateNotation("Layer1", r"G:\My Drive\GIS 5571\lab1\lab1.gdb\Layer1_ConvertCoordinateNota", "UNIQUE_ID", "BKWYNAME", "DD_2", "DD_2", None, 'GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984",SPHEROID["WGS_1984",6378137.0,298.257223563]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]];-400 -400 1000000000;-100000 10000;-100000 10000;8.98315284119521E-09;0.001;0.001;IsHighPrecision', 'PROJCS["NAD_1983_UTM_Zone_15N",GEOGCS["GCS_North_American_1983",DATUM["D_North_American_1983",SPHEROID["GRS_1980",6378137.0,298.257222101]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["False_Easting",500000.0],PARAMETER["False_Northing",0.0],PARAMETER["Central_Meridian",-93.0],PARAMETER["Scale_Factor",0.9996],PARAMETER["Latitude_Of_Origin",0.0],UNIT["Meter",1.0]]', "INCLUDE_INVALID")
 
-Join Code (used for all API)
+#Join Code (used for all API)
 arcpy.analysis.SpatialJoin("Layer1", r"layer2", r"G:\My Drive\GIS 5571\lab1\lab1.gdb\Layer1_SpatialJoin", "JOIN_ONE_TO_ONE", "KEEP_ALL")
 
-Print screen code (used for all API)
+#Print screen code (used for all API)
 fields = ['item1', 
          'item2',
          'item3']
@@ -52,5 +55,5 @@ df = pd.DataFrame([row for row in arcpy.da.SearchCursor(field1, field2)])
 
 df.head()
 
-Save as Geodatabase (used for all API) 
+#Save as Geodatabase (used for all API) 
 arcpy.topographic.GeodatabaseToShape(r"Layer1;layer2", r"G:\My Drive\GIS 5571\lab1", "VALUES", "DEFENSE_BY_SUBTYPE", "NO_CREATE_EMPTIES")
