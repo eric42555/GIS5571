@@ -15,8 +15,18 @@ arcpy.env.workspace = r'G:\My Drive\GIS 5571\lab1\lab1.gdb'
 !curl -O https://resources.gisdata.mn.gov/pub/gdrs/data/pub/us_mn_state_mngeo/health_facility_hospitals/shp_health_facility_hospitals.zip "Hospital_zip"
 
 #NDAWN
-!curl -O https://ndawn.ndsu.nodak.edu/station-info.html?station=26.csv "Station_28"
-!curl -O https://ndawn.ndsu.nodak.edu/station-info.html?station=96.csv "Station_96"
+base_ndawn_url = "https://ndawn.ndsu.nodak.edu/table.csv"
+
+master_param= {
+         "station" : "28"
+         "variable" : "mdavt"
+         "dfn" : "",
+         "year" : "2022"
+         
+req_response = requests.get(base_ndawn_url, params = master_params)
+
+with open("NameForNewCSVFile.csv" , "w") as newCSV_txt:
+         newCSV_txt.write(req_response.content.decode('utf-8'))
 
 #Google Places 
 
@@ -25,7 +35,7 @@ arcpy.env.workspace = r'G:\My Drive\GIS 5571\lab1\lab1.gdb'
 my_API_key = "AIzaSyDzj4ZeQln4oxDyR3off-JzlqcU77K5Vj8"
 goog_places_URL_base = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json"
 user_input_place = "Costco Eden Prairie" 
-         # second imput was " Costco Maple Grove"
+         # second imput was "Costco Maple Grove"
 formatted_input = user_input_place.replace(" ", "%20") 
 formatted_input
 input_param = "?input="+formatted_input
