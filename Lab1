@@ -2,8 +2,8 @@
 
 # Note: ArcOnline was not utilized, no seperate Notebooks were made.
 
-activate arcpy
 import arcpy
+activate arcpy
 import requests 
 arcpy.env.workspace = r'G:\My Drive\GIS 5571\lab1\lab1.gdb'
 
