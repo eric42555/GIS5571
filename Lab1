@@ -21,7 +21,7 @@ master_param= {
          "station" : "28"
          "variable" : "mdavt"
          "dfn" : "",
-         "year" : "2022"
+         "year" : "2022" }
          
 req_response = requests.get(base_ndawn_url, params = master_params)
 
