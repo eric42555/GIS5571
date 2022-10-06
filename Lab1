@@ -36,7 +36,8 @@ final_goog_path = goog_places_URL_base+input_param+input_type+fields_param+key_p
 final_goog_path
 goog_req_obj = requests.get(final_goog_path)
 print(goog_req_obj.text)
-places_response['candidates'][0]['geometry']
+#result named EP_response or MP_response 
+EP_response['candidates'][0]['geometry']
 
 # (x,y) points were used for further analysis 
 
