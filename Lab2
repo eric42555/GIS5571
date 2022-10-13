@@ -1,2 +1,56 @@
 Part 1 Report: https://docs.google.com/document/d/19sUrA7F3ge2A8OCZsB6iyLImIoT-bO0p/edit
 Part 2 Report: https://docs.google.com/document/u/0/d/1DJGqNswKBoh06wds505FQama63LADDyj/edit?fromCopy=true 
+
+    SECTION 1
+
+PART 1
+Data Aquirement 
+
+import arcpy
+activate arcpy
+import requests 
+arcpy.env.workspace = r'G:\My Drive\GIS 5571\Lab2.1\Lab2.1\Lab2.gdb
+
+#Bring in LAS Dataset 
+!curl -O https://resources.gisdata.mn.gov/pub/data/elevation/lidar/examples/lidar_sample/las/4342-12-06.las
+
+#convert LAS to DEM
+arcpy.conversion.LasDatasetToRaster("4342-12-06.las", r"g:\My Drive\GIS 5571\Lab2.1\Lab2.1\Lab2.gdb\TIN2", "ELEVATION", "BINNING AVERAGE LINEAR", "FLOAT", "CELLSIZE", 10, 1)
+
+#export DEM 
+
+aprx= arcpy.mpArcGISProject(r"G:\My Drive\GIS 5571\Lab2.2\lab2.2.aprx")
+lyt = aprx.listLayouts("DEM*")[0]
+#lyt.exportToPDF(r"G:\My Drive\GIS 5571\Lab2.2\Output\DEM.pdf" , resolution = 300)
+
+#Raster to TIN
+
+arcpy.ddd.RasterTin("TIN2", r"G:\My Drive\GIS 5571\Lab2.1\Lab2.1\TIN3", 9.56, 1500000, 1)
+
+#Export TIN 
+aprx= arcpy.mpArcGISProject(r"G:\My Drive\GIS 5571\Lab2.2\lab2.2.aprx")
+lyt = aprx.listLayouts("TIN*")[0]
+#lyt.exportToPDF(r"G:\My Drive\GIS 5571\Lab2.2\Output\TIN.pdf" , resolution = 300)
+
+#Visualization
+#visualization was done inside of the map viewer for easy of use 
+#This was done by bringing the TIN into the map viewer, and making an additional Pane with a 3D Local scene for the las data to be viewed in 3D
+
+Part 2
+#Prism ETL 
+
+#Conversions 
+
+#Export as disk
+
+#Export as Animation 
+
+    SECTION 2
+    
+#Aquire Data 
+
+#ETL for Geospatial Commons 
+
+#Create Cost Surface
+
+#Additional Parameters/Preferences 
