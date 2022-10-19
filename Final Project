@@ -1,2 +1,22 @@
 Prospectus 
 https://docs.google.com/document/d/1Rd5MsRLu2-fE3mc5JCaGkJAeOkBLIsLg/edit?usp=sharing&ouid=100089053748434382929&rtpof=true&sd=true
+
+First Draft
+https://docs.google.com/document/d/1LgfvJMQAe4GF9zsjZvUEEwH2jmyPskmI/edit#
+
+#Data Pipeline
+
+#Join Data 
+
+#Raster Calculator 
+
+#Extract by mask
+
+#Raster Calculator to Create Cost Surface 
+
+#Export Layout as PDF
+aprx= arcpy.mpArcGISProject(r"G:\My Drive\GIS 5571\FinalP.aprx")
+lyt = aprx.listLayouts("Index_Map*")[0]
+#lyt.exportToPDF(r"G:\My Drive\GIS 5571\FinalP\Output\Index_Map.pdf" , resolution = 300)
+
+#Export to Webmap 
