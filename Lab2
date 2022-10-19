@@ -80,7 +80,7 @@ No code used for this step, just used the export function and saved to local mac
 
 #Export as GIF
 lyt = aprx.listLayouts("PRISM_Space_Time*")[0]
-#lyt.exportToGIF(r"G:\My Drive\GIS 5571\Lab2.2\Output\PRISM_Space_Time.gif" , resolution = 300)
+#lyt.exportToGIF(r"C:\downloads\PRISM_Space_Time.gif" , resolution = 300)
 
     SECTION 2
     
@@ -88,6 +88,18 @@ lyt = aprx.listLayouts("PRISM_Space_Time*")[0]
 
 #ETL for Geospatial Commons 
 
-#Create Cost Surface
+#Clip to Relevent Area
 
-#Additional Parameters/Preferences 
+#Convert DEM to Slope 
+
+#Raster Calculator: Landcover 
+
+#Extract by Mask
+
+#Raster Calculator: Cost Surface 
+
+#Cost Distance
+
+#Cost Path 
+
+
