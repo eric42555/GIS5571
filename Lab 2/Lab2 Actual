@@ -92,6 +92,8 @@ lyt = aprx.listLayouts("PRISM_Space_Time*")[0]
 
 #Convert DEM to Slope 
 
+#standardize slope
+
 #Raster Calculator: Landcover 
 
 #Extract by Mask
