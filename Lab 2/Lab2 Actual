@@ -105,5 +105,30 @@ lyt = aprx.listLayouts("PRISM_Space_Time*")[0]
 #Cost Path 
 
 
+Geospatial Commons etl
+import arcpy
+import requests
+import os
+import zipfile
+import io
+
+working_dir = r'whatever'
+las_file = r'lasfile'
+las_actual.content = requests.post(las_file)
+path_to_las= os.path.join(working_dir, 'output.las')
+with open (path_to_las, 'wb') as f:
+	f.write(las_actual.content)
+#las is in working directory
+
+PRISM
+PRISM_request_URL = r'https:prism.oregonstate.edu/fetchData.php'
+PRISM_Params=r'type=all_bil&kind=normals&spatial=4km&elem=ppt&temporal=annual'
+final_PRISM_path=PRISM_request_URL+'?'PRISM_params
+	optional print(final_PRISM_path)
+PRISM_post_request= requests.post(final_PRISM_path)
+ourzipfile = zipfile.ZipFile(io.BytesIO(PRISM_post_request.content))
+ourzipfile.extractall(working_dir)
+#data is in working directory
+
 
 
