@@ -4,15 +4,25 @@ Part 2 Report: https://docs.google.com/document/u/0/d/1DJGqNswKBoh06wds505FQama6
     SECTION 1
 
 PART 1
-Data Aquirement 
+LAS ETL 
 
 import arcpy
-activate arcpy
 import requests 
-arcpy.env.workspace = r'G:\My Drive\GIS 5571\Lab2.1\Lab2.1\Lab2.gdb
+import io
+import os 
+import zipfile
+arcpy.env.workspace = r'G:\My Drive\GIS 5571\Lab2.1\Lab2.1\Lab2.gdb'
+working_dir = r'G:\My Drive\GIS 5571\Lab2.1\Lab2.1\lab2.gdb'
 
 #Bring in LAS Dataset 
-!curl -O https://resources.gisdata.mn.gov/pub/data/elevation/lidar/examples/lidar_sample/las/4342-12-06.las
+las_file = r'lasfile'
+las_actual.content = requests.post(las_file)
+path_to_las= os.path.join(working_dir, 'output.las')
+with open (path_to_las, 'wb') as f:
+	f.write(las_actual.content)
+	
+#Create LAS Dataset
+arcpy.management.CreateLasDataset('outputlas.las', 'lasdatasetoutput.lasd')
 
 #convert LAS to DEM
 arcpy.conversion.LasDatasetToRaster("4342-12-06.las", r"g:\My Drive\GIS 5571\Lab2.1\Lab2.1\Lab2.gdb\TIN2", "ELEVATION", "BINNING AVERAGE LINEAR", "FLOAT", "CELLSIZE", 10, 1)
@@ -38,6 +48,12 @@ lyt = aprx.listLayouts("TIN*")[0]
 
 Part 2
 #Prism ETL 
+PRISM_request_URL = r'https:prism.oregonstate.edu/fetchData.php'
+PRISM_Params=r'type=all_bil&kind=normals&spatial=4km&elem=ppt&temporal=annual'
+final_PRISM_path=PRISM_request_URL+'?'PRISM_params
+PRISM_post_request= requests.post(final_PRISM_path)
+ourzipfile = zipfile.ZipFile(io.BytesIO(PRISM_post_request.content))
+ourzipfile.extractall(working_dir)
 
 #Conversions 
 
@@ -103,32 +119,6 @@ lyt = aprx.listLayouts("PRISM_Space_Time*")[0]
 #Cost Distance
 
 #Cost Path 
-
-
-Geospatial Commons etl
-import arcpy
-import requests
-import os
-import zipfile
-import io
-
-working_dir = r'whatever'
-las_file = r'lasfile'
-las_actual.content = requests.post(las_file)
-path_to_las= os.path.join(working_dir, 'output.las')
-with open (path_to_las, 'wb') as f:
-	f.write(las_actual.content)
-#las is in working directory
-
-PRISM
-PRISM_request_URL = r'https:prism.oregonstate.edu/fetchData.php'
-PRISM_Params=r'type=all_bil&kind=normals&spatial=4km&elem=ppt&temporal=annual'
-final_PRISM_path=PRISM_request_URL+'?'PRISM_params
-	optional print(final_PRISM_path)
-PRISM_post_request= requests.post(final_PRISM_path)
-ourzipfile = zipfile.ZipFile(io.BytesIO(PRISM_post_request.content))
-ourzipfile.extractall(working_dir)
-#data is in working directory
 
 
 
