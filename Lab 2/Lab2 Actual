@@ -1,0 +1,107 @@
+Part 1 Report: https://docs.google.com/document/d/19sUrA7F3ge2A8OCZsB6iyLImIoT-bO0p/edit
+Part 2 Report: https://docs.google.com/document/u/0/d/1DJGqNswKBoh06wds505FQama63LADDyj/edit?fromCopy=true 
+
+    SECTION 1
+
+PART 1
+Data Aquirement 
+
+import arcpy
+activate arcpy
+import requests 
+arcpy.env.workspace = r'G:\My Drive\GIS 5571\Lab2.1\Lab2.1\Lab2.gdb
+
+#Bring in LAS Dataset 
+!curl -O https://resources.gisdata.mn.gov/pub/data/elevation/lidar/examples/lidar_sample/las/4342-12-06.las
+
+#convert LAS to DEM
+arcpy.conversion.LasDatasetToRaster("4342-12-06.las", r"g:\My Drive\GIS 5571\Lab2.1\Lab2.1\Lab2.gdb\TIN2", "ELEVATION", "BINNING AVERAGE LINEAR", "FLOAT", "CELLSIZE", 10, 1)
+
+#export DEM 
+
+aprx= arcpy.mpArcGISProject(r"G:\My Drive\GIS 5571\Lab2.2\lab2.2.aprx")
+lyt = aprx.listLayouts("DEM*")[0]
+#lyt.exportToPDF(r"G:\My Drive\GIS 5571\Lab2.2\Output\DEM.pdf" , resolution = 300)
+
+#Raster to TIN
+
+arcpy.ddd.RasterTin("TIN2", r"G:\My Drive\GIS 5571\Lab2.1\Lab2.1\TIN3", 9.56, 1500000, 1)
+
+#Export TIN 
+aprx= arcpy.mpArcGISProject(r"G:\My Drive\GIS 5571\Lab2.2\lab2.2.aprx")
+lyt = aprx.listLayouts("TIN*")[0]
+#lyt.exportToPDF(r"G:\My Drive\GIS 5571\Lab2.2\Output\TIN.pdf" , resolution = 300)
+
+#Visualization
+#visualization was done inside of the map viewer for easy of use 
+#This was done by bringing the TIN into the map viewer, and making an additional Pane with a 3D Local scene for the las data to be viewed in 3D
+
+Part 2
+#Prism ETL 
+
+#Conversions 
+
+#Combine Rasters 
+out_raster = arcpy.sa.Combine("PRISM_ppt_30yr_normal_4kmM3_annual_bil.bil;PRISM_ppt_30yr_normal_4kmM3_12_bil.bil;PRISM_ppt_30yr_normal_4kmM3_11_bil.bil;PRISM_ppt_30yr_normal_4kmM3_10_bil.bil;PRISM_ppt_30yr_normal_4kmM3_09_bil.bil;PRISM_ppt_30yr_normal_4kmM3_08_bil.bil;PRISM_ppt_30yr_normal_4kmM3_07_bil.bil;PRISM_ppt_30yr_normal_4kmM3_06_bil.bil;PRISM_ppt_30yr_normal_4kmM3_05_bil.bil;PRISM_ppt_30yr_normal_4kmM3_04_bil.bil;PRISM_ppt_30yr_normal_4kmM3_03_bil.bil;PRISM_ppt_30yr_normal_4kmM3_02_bil.bil;PRISM_ppt_30yr_normal_4kmM3_01_bil.bil"); out_raster.save(r"G:\My Drive\GIS 5571\Lab2.2\lab2.2\lab2.gdb\Combine_PRIS2")
+
+#Create Mosaic 
+arcpy.management.CreateMosaicDataset(r"G:\My Drive\GIS 5571\Lab2.2\lab2.2\lab2.gdb", "PRISM_Mosaic", 'GEOGCS["GCS_North_American_1983",DATUM["D_North_American_1983",SPHEROID["GRS_1980",6378137.0,298.257222101]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]]', None, '', "NONE", None)
+
+#Add Raster to Mosaic Dataset
+arcpy.management.AddRastersToMosaicDataset("PRISM_Mosi", "Raster Dataset", r"C:\Users\eric4255\Desktop\PRISM_combined", "UPDATE_CELL_SIZES", "UPDATE_BOUNDARY", "NO_OVERVIEWS", None, 0, 1500, None, '', "SUBFOLDERS", "ALLOW_DUPLICATES", "NO_PYRAMIDS", "NO_STATISTICS", "NO_THUMBNAILS", '', "NO_FORCE_SPATIAL_REFERENCE", "NO_STATISTICS", None, "NO_PIXEL_CACHE", r"C:\Users\eric4255\AppData\Local\ESRI\rasterproxies\PRISM_Mosi")
+
+#Build Miltidimensional Info
+arcpy.md.BuildMultidimensionalInfo("PRISM_Mosi", "Name", None, None, "NO_DELETE_MULTIDIMENSIONAL_INFO")
+
+#Make Multidimensional Raster Layer 
+
+in_multidimensional_raster = r"G:\My Drive\GIS 5571\Lab2.2\lab2.2\lab2\PRISM_Mosi.crf"
+out_multidimensional_raster_layer = r"G:\My Drive\GIS 5571\Lab2.2\lab2.2\lab2\PRISM_Multi.crf"
+variables = "Value"
+dimension_def = "BY_ITERATION"
+dimension = "StdTime"
+start_of_first_iteration = "PRISM_ppt_30yr_normal_4kmM3_01_bil"
+end_of_first_iteration = "PRISM_ppt_30yr_normal_4kmM3_annual_bil"
+iteration_step = "1"
+iteration_unit = "YEARS"
+template = "120.084279939743 0.914964278021376 139.524470909773 21.1231086159414"
+ 
+arcpy.md.MakeMultidimensionalRasterLayer(
+	in_multidimensional_raster, out_multidimensional_raster_layer, 
+	variables, dimension_def, dimension, start_of_first_iteration, 
+	end_of_first_iteration, iteration_step, iteration_unit, template)
+
+#Convert to Space Time Cube 
+arcpy.CreateSpaceTimeCubeMDRasterLayer_stpm(r"PRISM_multi", 
+                  r"PRISM_SpaceTtimeCube.nc", "PRISM_Space_Time")
+
+#Export to disk
+No code used for this step, just used the export function and saved to local machine 
+
+#Export as GIF
+lyt = aprx.listLayouts("PRISM_Space_Time*")[0]
+#lyt.exportToGIF(r"C:\downloads\PRISM_Space_Time.gif" , resolution = 300)
+
+    SECTION 2
+    
+#Aquire Data 
+
+#ETL for Geospatial Commons 
+
+#Clip to Relevent Area
+
+#Convert DEM to Slope 
+
+#Raster Calculator: Landcover 
+
+#Extract by Mask
+
+#Raster Calculator: Cost Surface 
+
+#Cost Distance
+
+#Cost Path 
+
+
+
+
