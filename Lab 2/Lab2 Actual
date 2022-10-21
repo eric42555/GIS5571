@@ -15,7 +15,7 @@ arcpy.env.workspace = r'G:\My Drive\GIS 5571\Lab2.1\Lab2.1\Lab2.gdb'
 working_dir = r'G:\My Drive\GIS 5571\Lab2.1\Lab2.1\lab2.gdb'
 
 #Bring in LAS Dataset 
-las_file = r'lasfile'
+las_file = r'https://resources.gisdata.mn.gov/pub/data/elevation/lidar/examples/lidar_sample/las/4342-12-05.las'\n'
 las_actual.content = requests.post(las_file)
 path_to_las= os.path.join(working_dir, 'output.las')
 with open (path_to_las, 'wb') as f:
@@ -108,15 +108,46 @@ lyt = aprx.listLayouts("PRISM_Space_Time*")[0]
     
 #Aquire Data 
 
+import arcpy
+import zipfile 
+import requests
+import io
+import os 
+
+working_dir=r'G:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb'
+
 #ETL for Geospatial Commons 
 
+
+landuse_file = r'https://resources.gisdata.mn.gov/pub/gdrs/data/pub/us_mn_state_dnr/biota_landcover_census_of_90s/tif_biota_landcover_census_of_90s.zip'
+landuse_actual.content = requests.post(landuse_file)
+landusezipfile = zipfile.ZipFile(io.BytesIO(landuse_post_request.content))
+landusezipfile.extractall(working_dir)
+
+
+DEM_file = r'https://resources.gisdata.mn.gov/pub/gdrs/data/pub/us_mn_state_dnr/elev_30m_digital_elevation_model/fgdb_elev_30m_digital_elevation_model.zip'
+DEM_actual = requests.post(DEM_file)
+DEMzipfile = zipfile.ZipFile(io.BytesIO(DEM_post_request.content))
+DEMzipfile.extractall(working_dir)
+
 #Clip to Relevent Area
+arcpy.management.Clip("NLCD_2019_Land_Cover.tif", "566420 4876000 579000 4887420", r"G:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb\NLCD_2019_Land_Cover_Clip", None, "255", "NONE", "NO_MAINTAIN_EXTENT")arcpy.management.Clip(r"Digital Elevation Model - 30m Resolution\Digital Elevation Model", "56420 4876000 579000 4887420", r"G:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb\landcover_census_of_the_Clip", None, "32767", "NONE", "NO_MAINTAIN_EXTENT")
+arcpy.management.Clip(r"Digital Elevation Model - 30m Resolution\Digital Elevation Model", "56420 4876000 579000 4887420", r"G:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb\landcover_census_of_the_Clip", None, "32767", "NONE", "NO_MAINTAIN_EXTENT")
 
 #Convert DEM to Slope 
+out_raster = arcpy.sa.Slope("DEM", "DEGREE", 1, "PLANAR", "METER"); out_raster.save(r"G:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb\Slope_Digita1")
 
 #standardize slope
+output_raster = arcpy.ia.RasterCalculator(' "Slope_Digita1" /90'); output_raster.save(r"g:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb\slope__standarized")
 
 #Raster Calculator: Landcover 
+
+Farmland 
+arcpy.ia.RasterCalculator(' "Land_Cover_Clip" == 81 or  "Land_Cover_Clip" == 82'); output_raster.save(r"g:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb\Farmland")
+
+Water
+arcpy.ia.RasterCalculator(' "Land_Cover_Clip" == 90 or  "Land_Cover_Clip" == 95'); output_raster.save(r"g:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb\Water")
+
 
 #Extract by Mask
 
@@ -126,5 +157,8 @@ lyt = aprx.listLayouts("PRISM_Space_Time*")[0]
 
 #Cost Path 
 
-
+Start Point **remember to flip when imputing**
+44.127985, -92.148796
+End Point 
+44.05418743989885, -92.04483056061326
 
