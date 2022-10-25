@@ -6,9 +6,19 @@ https://docs.google.com/document/d/1LgfvJMQAe4GF9zsjZvUEEwH2jmyPskmI/edit#
 
 #Data Pipeline
 
-#Join Data 
+#Data 1
 
-#Raster Calculator 
+#Data 2
+
+#Data 3
+
+#Data 4
+
+#Raster Calculator for landcover 
+
+#Raster Calculator for CWD
+
+#Raster Calculator for landcover 
 
 #Extract by mask
 
@@ -20,11 +30,4 @@ lyt = aprx.listLayouts("Index_Map*")[0]
 #lyt.exportToPDF(r"G:\My Drive\GIS 5571\FinalP\Output\Index_Map.pdf" , resolution = 300)
 
 #Export to Webmap 
-Footer
-© 2022 GitHub, Inc.
-Footer navigation
-Terms
-Privacy
-Security
-Status
-
+arcpy.server.ExportWebMap(FinalP_as_JSON, "G:\My Drive\GIS 5571\FinalP_webmap.json")
