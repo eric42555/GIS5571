@@ -72,6 +72,9 @@ arcpy.management.CreateMosaicDataset(r"G:\My Drive\GIS 5571\Lab2.2\lab2.2\lab2.g
 #Add Raster to Mosaic Dataset
 arcpy.management.AddRastersToMosaicDataset("PRISM_Mosi", "Raster Dataset", r"G:\My Drive\GIS 5571\Lab2.2\Lab2.2\lab2.gdb\PRISM", "UPDATE_CELL_SIZES", "UPDATE_BOUNDARY", "NO_OVERVIEWS", None, 0, 1500, None, '', "SUBFOLDERS", "ALLOW_DUPLICATES", "NO_PYRAMIDS", "NO_STATISTICS", "NO_THUMBNAILS", '', "NO_FORCE_SPATIAL_REFERENCE", "NO_STATISTICS", None, "NO_PIXEL_CACHE", r"G:\My Drive\GIS 5571\Lab2.2\Lab2.2\lab2.gdb\PRISM_Mosi")
 
+# Add Standard time to Rasters 
+This was done by manually adding a attribute (as a date) to the attribute table and inputing the standard time 
+
 #Build Miltidimensional Info
 arcpy.md.BuildMultidimensionalInfo("PRISM_Mosi", "Name", None, None, "NO_DELETE_MULTIDIMENSIONAL_INFO")
 
@@ -86,7 +89,7 @@ start_of_first_iteration = "PRISM_ppt_30yr_normal_4kmM3_01_bil"
 end_of_first_iteration = "PRISM_ppt_30yr_normal_4kmM3_annual_bil"
 iteration_step = "1"
 iteration_unit = "YEARS"
-template = "120.084279939743 0.914964278021376 139.524470909773 21.1231086159414"
+template = "01/01, 01/02, 01/03"
  
 arcpy.md.MakeMultidimensionalRasterLayer(
 	in_multidimensional_raster, out_multidimensional_raster_layer, 
@@ -148,14 +151,34 @@ arcpy.ia.RasterCalculator(' "Land_Cover_Clip" == 81 or  "Land_Cover_Clip" == 82'
 Water
 arcpy.ia.RasterCalculator(' "Land_Cover_Clip" == 90 or  "Land_Cover_Clip" == 95'); output_raster.save(r"g:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb\Water")
 
+Passable 
+output_raster = arcpy.ia.RasterCalculator(' ("Land_Cover_Clip"== 41) or ( "Land_Cover_Clip" ==81) or ( "Land_Cover_Clip" == 21) or ( "Land_Cover_Clip" ==23) or ( "Land_Cover_Clip" == 22) or ( "Land_Cover_Clip" ==71)'); output_raster.save(r"g:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb\Passable")
 
 #Extract by Mask
+out_raster = arcpy.sa.ExtractByMask("Start", "End", "INSIDE", '566420 4876000 579020 4887430 PROJCS["NAD_1983_UTM_Zone_15N",GEOGCS["GCS_North_American_1983",DATUM["D_North_American_1983",SPHEROID["GRS_1980",6378137.0,298.257222101]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["False_Easting",500000.0],PARAMETER["False_Northing",0.0],PARAMETER["Central_Meridian",-93.0],PARAMETER["Scale_Factor",0.9996],PARAMETER["Latitude_Of_Origin",0.0],UNIT["Meter",1.0]]'); out_raster.save(r"G:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb\Extract_Land1")
 
 #Raster Calculator: Cost Surface 
+	(1) Using all weights as 5
+output_raster = arcpy.ia.RasterCalculator('(5 * "passable2") + (5* "Farmland3") + (5* "Water") + (5* "slope__standarized")'); output_raster.save(r"g:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb\cost1")
+	
+	(2) Weighting Passable as a 5 and rest as 3
+output_raster = arcpy.ia.RasterCalculator('(5 * "passable2") + (3* "Farmland3") + (3* "Water") + (3* "slope__standarized")'); output_raster.save(r"g:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb\cost3")
+	
+	(2) Weighting slope as a 5 and rest as 3
+output_raster = arcpy.ia.RasterCalculator('(3 * "passable2") + (3* "Farmland3") + (3* "Water") + (5* "slope__standarized")'); output_raster.save(r"g:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb\cost4")
+
 
 #Cost Distance
-
+	(1) out_distance_raster = arcpy.sa.CostDistance("cost1", "cost1", None, r"G:\My Drive\GIS 5571\Lab2.3\Backlink1_1", None, None, None, None, ''); out_distance_raster.save(r"G:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb\CostD1_2")
+	(2) out_distance_raster = arcpy.sa.CostDistance("cost2", "cost2", None, r"G:\My Drive\GIS 5571\Lab2.3\Backlink1_2", None, None, None, None, ''); out_distance_raster.save(r"G:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb\CostD1_3")
+	(3) out_distance_raster = arcpy.sa.CostDistance("cost3", "cost3", None, r"G:\My Drive\GIS 5571\Lab2.3\Backlink1_3", None, None, None, None, ''); out_distance_raster.save(r"G:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb\CostD1_4")
+	
 #Cost Path 
+	(1) out_raster = arcpy.sa.CostPath("CostD1_2", "cost1", "Backlink1_1", "EACH_CELL", "Value", "INPUT_RANGE"); out_raster.save(r"G:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb\CostPath_1")
+	(2) out_raster = arcpy.sa.CostPath("CostD1_3", "cost2", "Backlink1_2", "EACH_CELL", "Value", "INPUT_RANGE"); out_raster.save(r"G:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb\CostPath_2")
+	(3) out_raster = arcpy.sa.CostPath("CostD1_4", "cost3", "Backlink1_3", "EACH_CELL", "Value", "INPUT_RANGE"); out_raster.save(r"G:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb\CostPath_3")
+
+
 
 Start Point **remember to flip when imputing**
 44.127985, -92.148796
