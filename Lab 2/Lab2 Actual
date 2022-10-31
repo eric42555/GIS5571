@@ -165,7 +165,7 @@ output_raster = arcpy.ia.RasterCalculator('(5 * "passable2") + (5* "Farmland3") 
 	(2) Weighting Passable as a 5 and rest as 3
 output_raster = arcpy.ia.RasterCalculator('(5 * "passable2") + (3* "Farmland3") + (3* "Water") + (3* "slope__standarized")'); output_raster.save(r"g:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb\cost3")
 	
-	(2) Weighting slope as a 5 and rest as 3
+	(3) Weighting slope as a 5 and rest as 3
 output_raster = arcpy.ia.RasterCalculator('(3 * "passable2") + (3* "Farmland3") + (3* "Water") + (5* "slope__standarized")'); output_raster.save(r"g:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb\cost4")
 
 
