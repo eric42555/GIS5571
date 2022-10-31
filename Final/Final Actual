@@ -6,13 +6,42 @@ https://docs.google.com/document/d/1LgfvJMQAe4GF9zsjZvUEEwH2jmyPskmI/edit#
 
 #Data Pipeline
 
-#Data 1
+import arcpy
+import requests 
+import io
+import os 
+import zipfile
+arcpy.env.workspace = r'G:\My Drive\GIS 5571\Final\FinalP.gdb'
+working_dir = r'G:\My Drive\GIS 5571\Final\FinalP.gdb'
 
-#Data 2
+#Land Use 
 
-#Data 3
+landuse_file = r'url'
+landuse_actual.content = requests.post(data_file)
+landusezipfile = zipfile.ZipFile(io.BytesIO(data_post_request.content))
+landusezipfile.extractall(working_dir)
 
-#Data 4
+#Zone Numbers 
+
+landuse_file = r'url'
+landuse_actual.content = requests.post(data_file)
+landusezipfile = zipfile.ZipFile(io.BytesIO(data_post_request.content))
+landusezipfile.extractall(working_dir)
+
+#CWD Data 
+
+landuse_file = r'url'
+landuse_actual.content = requests.post(data_file)
+landusezipfile = zipfile.ZipFile(io.BytesIO(data_post_request.content))
+landusezipfile.extractall(working_dir)
+
+#Harvest Data 
+
+landuse_file = r'url'
+landuse_actual.content = requests.post(data_file)
+landusezipfile = zipfile.ZipFile(io.BytesIO(data_post_request.content))
+landusezipfile.extractall(working_dir)
+
 
 #Raster Calculator for landcover 
 
@@ -20,9 +49,9 @@ https://docs.google.com/document/d/1LgfvJMQAe4GF9zsjZvUEEwH2jmyPskmI/edit#
 
 #Raster Calculator for landcover 
 
-#Extract by mask
-
 #Raster Calculator to Create Cost Surface 
+
+#Accuracy Assessment
 
 #Export Layout as PDF
 aprx= arcpy.mpArcGISProject(r"G:\My Drive\GIS 5571\FinalP.aprx")
