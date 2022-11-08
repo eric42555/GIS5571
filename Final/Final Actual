@@ -24,6 +24,9 @@ landuse_actual.content = requests.post(landuse_file)
 landusezipfile = zipfile.ZipFile(io.BytesIO(landuse_post_request.content))
 landusezipfile.extractall(working_dir)
 
+#Clip
+arcpy.management.Clip("NLCD_2019_Land_Cover_Change_Index.tif", "189783.56 4816309.33 761653.52 5472346.4998", r"G:\My Drive\GIS 5571\Final\FinalP\FinalP.gdb\Land_Cover_Clip", "Boundaries_of_Minnesota", "255", "NONE", "NO_MAINTAIN_EXTENT")
+
 #Zone Numbers 
 
 zone_file = r'https://resources.gisdata.mn.gov/pub/gdrs/data/pub/us_mn_state_dnr/bdry_deer_permit_areas/shp_bdry_deer_permit_areas.zip'
@@ -48,6 +51,16 @@ with open("NameForNewCSVFile.csv" , "w") as newCSV_txt:
 #Transform Code (used for CWD only)
 arcpy.management.ConvertCoordinateNotation("CWD", r"G:\My Drive\GIS 5571\Final\FinalP\FinalP.gdb\CWD_ConvertCoordinateNota", "UNIQUE_ID", "BKWYNAME", "DD_2", "DD_2", None, 'GEOGCS["NAD_1983_UTM_Zone_15N",DATUM["NAD_1983_UTM_Zone_15N",SPHEROID["GRS_1980",6378137.0,298.257223563]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]];-400 -400 1000000000;-100000 10000;-100000 10000;8.98315284119521E-09;0.001;0.001;IsHighPrecision', 'PROJCS["NAD_1983_UTM_Zone_15N",GEOGCS["GCS_North_American_1983",DATUM["D_North_American_1983",SPHEROID["GRS_1980",6378137.0,298.257222101]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["False_Easting",500000.0],PARAMETER["False_Northing",0.0],PARAMETER["Central_Meridian",-93.0],PARAMETER["Scale_Factor",0.9996],PARAMETER["Latitude_Of_Origin",0.0],UNIT["Meter",1.0]]', "INCLUDE_INVALID")
 
+#Create Raster
+#arcpy.management.CreateRasterDataset(r"G:\My Drive\GIS 5571\Final\FinalP", "CWD_raster", None, "8_BIT_UNSIGNED", None, 1, '', "PYRAMIDS -1 NEAREST DEFAULT 75 NO_SKIP NO_SIPS", "128 128", "LZ77", None)
+
+#Join Field 
+ 
+#inFeatures = "CWD_CSV"
+#joinField = "Disease"
+#joinTable = "CWD_final"
+#arcpy.management.JoinField(inFeatures, joinField, joinTable, joinField) 
+    
 #Harvest Data 
 
 harvest_file = r'https://resources.gisdata.mn.gov/pub/gdrs/data/pub/us_mn_state_dnr/env_mn_deer_harvest/shp_env_mn_deer_harvest.zip'
@@ -62,6 +75,12 @@ DEM_actual = requests.post(DEM_file)
 DEMzipfile = zipfile.ZipFile(io.BytesIO(DEM_post_request.content))
 DEMzipfile.extractall(working_dir)
 
+#Convert DEM to Slope 
+out_raster = arcpy.sa.Slope("DEM", "DEGREE", 1, "PLANAR", "METER"); out_raster.save(r"G:\My Drive\GIS 5571\Final\FinalP\FinalP\Slope")
+
+#Standardize 
+
+
 
 #Raster Calculator for landcover 
 
@@ -72,7 +91,12 @@ DEMzipfile.extractall(working_dir)
 #Raster Calculator to Create Cost Surface 
 
 #Accuracy Assessment
-arcpy.gp.ComputeConfusionMatrix("aapnt2.shp", "confm.dbf")
+
+#Create Accuracy Assessment Points 
+arcpy.gp.CreateAccuracyAssessmentPoints("day_output.tif", "AccuracyPoints.shp", "65", "RANDOM")
+
+#Confusion Matrix
+arcpy.gp.ComputeConfusionMatrix("AccuracyPoints.shp", "CMatrix.dbf")
 
 #Export Layout as PDF
 aprx= arcpy.mpArcGISProject(r"G:\My Drive\GIS 5571\Final\FinalP.aprx")
