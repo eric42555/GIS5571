@@ -25,7 +25,7 @@ landusezipfile = zipfile.ZipFile(io.BytesIO(landuse_post_request.content))
 landusezipfile.extractall(working_dir)
 
 #Clip
-arcpy.management.Clip("NLCD_2019_Land_Cover_Change_Index.tif", "189783.56 4816309.33 761653.52 5472346.4998", r"G:\My Drive\GIS 5571\Final\FinalP\FinalP.gdb\Land_Cover_Clip", "Boundaries_of_Minnesota", "255", "NONE", "NO_MAINTAIN_EXTENT")
+arcpy.management.Clip("NLCD_2019_Land_Cover.tif", "189783.56 4816309.33 761653.52 5472346.4998", r"G:\My Drive\GIS 5571\Final\FinalP\FinalP.gdb\Land_Cover_Clip", "Boundaries_of_Minnesota", "255", "NONE", "NO_MAINTAIN_EXTENT")
 
 #Zone Numbers 
 
@@ -79,16 +79,26 @@ DEMzipfile.extractall(working_dir)
 out_raster = arcpy.sa.Slope("DEM", "DEGREE", 1, "PLANAR", "METER"); out_raster.save(r"G:\My Drive\GIS 5571\Final\FinalP\FinalP\Slope")
 
 #Standardize 
-
-
+output_raster = arcpy.ia.RasterCalculator(' "Slope" /90'); output_raster.save(r"c:\Users\eric4255\Desktop\Final\Final.gdb\Slope_standard1")
 
 #Raster Calculator for landcover 
+output_raster = arcpy.ia.RasterCalculator(' ("NLCD_2019_Land_Cover_Clip"==0)  | ( "NLCD_2019_Land_Cover_Clip"==11)  | ("NLCD_2019_Land_Cover_Clip"==24)  | ( "NLCD_2019_Land_Cover_Clip"==21)  |( "NLCD_2019_Land_Cover_Clip"==22)  | ( "NLCD_2019_Land_Cover_Clip"==23) |( "NLCD_2019_Land_Cover_Clip"==90)'); output_raster.save(r"c:\Users\eric4255\Desktop\Final\Final.gdb\landcover")
 
 #Raster Calculator for CWD
+output_raster = arcpy.ia.RasterCalculator('("CWD_final"==1) | ("CWD_final"==2)'); output_raster.save(r"c:\users\eric4255\desktop\final\final.gdb\CWD")
 
 #Raster Calculator for Hunter Success  
+output_raster = arcpy.ia.RasterCalculator('("harvest"==1)'); output_raster.save(r"c:\users\eric4255\desktop\final\final.gdb\Harvest")
 
 #Raster Calculator to Create Cost Surface 
+Day
+output_raster = arcpy.ia.RasterCalculator('("slope_standard") + 3*(Harvest) + 1.5*( "landcover") + 2*(CWD)'); output_raster.save(r"c:\users\eric4255\desktop\final\final.gdb\costsurface")
+Night
+output_raster = arcpy.ia.RasterCalculator('(-"slope_standard") + 3*(Harvest) + 1.5*( "landcover") + 2*(CWD)'); output_raster.save(r"c:\users\eric4255\desktop\final\final.gdb\daycostsurface")
+
+#Standardize 
+output_raster = arcpy.ia.RasterCalculator(' "daycostsurface" /12.2'); output_raster.save(r"c:\Users\eric4255\Desktop\Final\Final.gdb\daycost_standard")
+output_raster = arcpy.ia.RasterCalculator(' "nightcostsurface" /7.9'); output_raster.save(r"c:\Users\eric4255\Desktop\Final\Final.gdb\nightcost_standard")
 
 #Accuracy Assessment
 
@@ -101,7 +111,11 @@ arcpy.gp.ComputeConfusionMatrix("AccuracyPoints.shp", "CMatrix.dbf")
 #Export Layout as PDF
 aprx= arcpy.mpArcGISProject(r"G:\My Drive\GIS 5571\Final\FinalP.aprx")
 lyt = aprx.listLayouts("Index_Map*")[0]
-#lyt.exportToPDF(r"G:\My Drive\GIS 5571\Final\FinalP\Output\Index_Map.pdf" , resolution = 300)
+#lyt.exportToPDF(r"G:\My Drive\GIS 5571\Final\FinalP\Output\EveningIndex_Map.pdf" , resolution = 300)
+
+aprx= arcpy.mpArcGISProject(r"G:\My Drive\GIS 5571\Final\FinalP.aprx")
+lyt = aprx.listLayouts("Index_Map*")[0]
+#lyt.exportToPDF(r"G:\My Drive\GIS 5571\Final\FinalP\Output\MorningIndex_Map.pdf" , resolution = 300)
 
 #Export to Webmap 
 arcpy.server.ExportWebMap(FinalP_as_JSON, "G:\My Drive\GIS 5571\Final\FinalP_webmap.json")
