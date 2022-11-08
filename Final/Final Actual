@@ -1,4 +1,4 @@
-rospectus 
+Prospectus 
 https://docs.google.com/document/d/1Rd5MsRLu2-fE3mc5JCaGkJAeOkBLIsLg/edit?usp=sharing&ouid=100089053748434382929&rtpof=true&sd=true
 
 First Draft
@@ -67,6 +67,16 @@ harvest_file = r'https://resources.gisdata.mn.gov/pub/gdrs/data/pub/us_mn_state_
 harvest_actual.content = requests.post(data_file)
 harvestzipfile = zipfile.ZipFile(io.BytesIO(data_post_request.content))
 harvestzipfile.extractall(working_dir)
+
+#Create Raster
+#arcpy.management.CreateRasterDataset(r"G:\My Drive\GIS 5571\Final\FinalP", "harvest_raster", None, "8_BIT_UNSIGNED", None, 1, '', "PYRAMIDS -1 NEAREST DEFAULT 75 NO_SKIP NO_SIPS", "128 128", "LZ77", None)
+
+#Join Field 
+ 
+#inFeatures = "Harvest"
+#joinField = "Success"
+#joinTable = "Harvest_final"
+#arcpy.management.JoinField(inFeatures, joinField, joinTable, joinField) 
 
 #DEM 
 
