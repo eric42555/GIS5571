@@ -122,7 +122,7 @@ working_dir=r'G:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb'
 #ETL for Geospatial Commons 
 
 
-landuse_file = r'https://resources.gisdata.mn.gov/pub/gdrs/data/pub/us_mn_state_dnr/biota_landcover_census_of_90s/tif_biota_landcover_census_of_90s.zip'
+landuse_file = r'https://resources.gisdata.mn.gov/pub/gdrs/data/pub/us_mn_state_dnr/biota_landcover_nlcd_mn_2019/tif_biota_landcover_nlcd_mn_2019.zip'
 landuse_actual.content = requests.post(landuse_file)
 landusezipfile = zipfile.ZipFile(io.BytesIO(landuse_post_request.content))
 landusezipfile.extractall(working_dir)
