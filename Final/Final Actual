@@ -78,6 +78,9 @@ harvestzipfile.extractall(working_dir)
 #joinTable = "Harvest_final"
 #arcpy.management.JoinField(inFeatures, joinField, joinTable, joinField) 
 
+#no need to standardize because Success is a percentage 0-.99
+Attribute Table was edited and given the parameter success > .50 = 1
+
 #DEM 
 
 DEM_file = r'https://resources.gisdata.mn.gov/pub/gdrs/data/pub/us_mn_state_dnr/elev_30m_digital_elevation_model/fgdb_elev_30m_digital_elevation_model.zip'
@@ -92,24 +95,24 @@ out_raster = arcpy.sa.Slope("DEM", "DEGREE", 1, "PLANAR", "METER"); out_raster.s
 output_raster = arcpy.ia.RasterCalculator(' "Slope" /90'); output_raster.save(r"G:\My Drive\GIS 5571\Final\FinalP\FinalP.gdb\Slope")
 
 #Raster Calculator for landcover 
-output_raster = arcpy.ia.RasterCalculator(' ("NLCD_2019_Land_Cover_Clip"==0)  | ( "NLCD_2019_Land_Cover_Clip"==11)  | ("NLCD_2019_Land_Cover_Clip"==24)  | ( "NLCD_2019_Land_Cover_Clip"==21)  |( "NLCD_2019_Land_Cover_Clip"==22)  | ( "NLCD_2019_Land_Cover_Clip"==23) |( "NLCD_2019_Land_Cover_Clip"==90)'); output_raster.save(r"G:\My Drive\GIS 5571\Final\FinalP\FinalP.gdb\landcover")
+output_raster = arcpy.ia.RasterCalculator(' ("landcover"==0)  | ( "landcover"==11)  | ("landcover"==24)  | ( "landcover"==21)  |( "landcover"==22)  | ( "landcover"==23) |( "landcover"==90)'); output_raster.save(r"G:\My Drive\GIS 5571\Final\FinalP\FinalP.gdb\landcover_final")
 
 #Raster Calculator for CWD
-output_raster = arcpy.ia.RasterCalculator('("CWD_final"==1) | ("CWD_final"==2)'); output_raster.save(r"G:\My Drive\GIS 5571\Final\FinalP\FinalP.gdb\CWD")
+output_raster = arcpy.ia.RasterCalculator('("CWD_final"==1)'); output_raster.save(r"G:\My Drive\GIS 5571\Final\FinalP\FinalP.gdb\CWD")
+
+#CWD==1 is indicating zones with no CWD presence 
 
 #Raster Calculator for Hunter Success 
-
-Attribute Table was edited and given the parameter success > .50 = 1
 
 output_raster = arcpy.ia.RasterCalculator('("harvest"==1)'); output_raster.save(r"G:\My Drive\GIS 5571\Final\FinalP\FinalP.gdb\Harvest")
 
 #Raster Calculator to Create Cost Surface 
 
 Day
-output_raster = arcpy.ia.RasterCalculator('("slope_standard") + 3*(Harvest) + 1.5*( "landcover") + 2*(CWD)'); output_raster.save(r"G:\My Drive\GIS 5571\Final\FinalP\FinalP.gdb\daycostsurface")
+output_raster = arcpy.ia.RasterCalculator('("slope_standard") + 3*(harvest) + 1.5*( "landcover_final") + 2*(CWD)'); output_raster.save(r"G:\My Drive\GIS 5571\Final\FinalP\FinalP.gdb\daycostsurface")
 
 Night
-output_raster = arcpy.ia.RasterCalculator('(-"slope_standard") + 3*(Harvest) + 1.5*( "landcover") + 2*(CWD)'); output_raster.save(r"G:\My Drive\GIS 5571\Final\FinalP\FinalP.gdb\nightcostsurface")
+output_raster = arcpy.ia.RasterCalculator('(-"slope_standard") + 3*(harvest) + 1.5*( "landcover") + 2*(CWD)'); output_raster.save(r"G:\My Drive\GIS 5571\Final\FinalP\FinalP.gdb\nightcostsurface")
 
 #Standardize 
 output_raster = arcpy.ia.RasterCalculator(' "daycostsurface" /12.2'); output_raster.save(r"G:\My Drive\GIS 5571\Final\FinalP\FinalP.gdb\daycost_standard")
@@ -118,7 +121,7 @@ output_raster = arcpy.ia.RasterCalculator(' "nightcostsurface" /7.9'); output_ra
 #Accuracy Assessment
 
 #Create Accuracy Assessment Points 
-arcpy.gp.CreateAccuracyAssessmentPoints("day_output.tif", "AccuracyPoints.shp", "65", "RANDOM")
+arcpy.gp.CreateAccuracyAssessmentPoints("daycost_standard.tif", "AccuracyPoints.shp", "65", "RANDOM")
 
 #Confusion Matrix
 arcpy.gp.ComputeConfusionMatrix("AccuracyPoints.shp", "CMatrix.dbf")
