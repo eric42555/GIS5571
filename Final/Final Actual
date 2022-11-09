@@ -36,18 +36,8 @@ zonezipfile.extractall(working_dir)
 
 #CWD Data 
 
-base_CWD_url =  "https://www.dnr.state.mn.us/cwd/table.csv"
+#There is no easy way to download the data as it is just a JPEG. The JPEG comes from a report which is a PDF so no help there either. I made a excel sheet and made a column for zone number and for CWD 1=no 0=yes         
 
-master_param= {
-         "state" : "MN"
-         "season" : "deer"
-         "year" : "2022" }
-         
-req_response = requests.get(base_CWD_url, params = master_params)
-
-with open("NameForNewCSVFile.csv" , "w") as newCSV_txt:
-         newCSV_txt.write(req_response.content.decode('utf-8'))"
-         
 #Transform Code (used for CWD only)
 arcpy.management.ConvertCoordinateNotation("CWD", r"G:\My Drive\GIS 5571\Final\FinalP\FinalP.gdb\CWD_ConvertCoordinateNota", "UNIQUE_ID", "BKWYNAME", "DD_2", "DD_2", None, 'GEOGCS["NAD_1983_UTM_Zone_15N",DATUM["NAD_1983_UTM_Zone_15N",SPHEROID["GRS_1980",6378137.0,298.257223563]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]];-400 -400 1000000000;-100000 10000;-100000 10000;8.98315284119521E-09;0.001;0.001;IsHighPrecision', 'PROJCS["NAD_1983_UTM_Zone_15N",GEOGCS["GCS_North_American_1983",DATUM["D_North_American_1983",SPHEROID["GRS_1980",6378137.0,298.257222101]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["False_Easting",500000.0],PARAMETER["False_Northing",0.0],PARAMETER["Central_Meridian",-93.0],PARAMETER["Scale_Factor",0.9996],PARAMETER["Latitude_Of_Origin",0.0],UNIT["Meter",1.0]]', "INCLUDE_INVALID")
 
@@ -79,7 +69,6 @@ harvestzipfile.extractall(working_dir)
 #arcpy.management.JoinField(inFeatures, joinField, joinTable, joinField) 
 
 #no need to standardize because Success is a percentage 0-.99
-Attribute Table was edited and given the parameter Success > .50 = 1
 
 #DEM 
 
@@ -101,10 +90,6 @@ output_raster = arcpy.ia.RasterCalculator(' ("landcover"==0)  | ( "landcover"==1
 output_raster = arcpy.ia.RasterCalculator('("CWD_final"==1)'); output_raster.save(r"G:\My Drive\GIS 5571\Final\FinalP\FinalP.gdb\CWD")
 
 #CWD==1 is indicating zones with no CWD presence 
-
-#Raster Calculator for Hunter Success 
-
-output_raster = arcpy.ia.RasterCalculator('("harvest"==1)'); output_raster.save(r"G:\My Drive\GIS 5571\Final\FinalP\FinalP.gdb\Harvest")
 
 #Raster Calculator to Create Cost Surface 
 
@@ -140,7 +125,7 @@ outZonalStatistics.save("G:\My Drive\GIS 5571\Final\FinalP\FinalP.gdb\NightFinal
 #Accuracy Assessment
 
 #Create Accuracy Assessment Points 
-arcpy.gp.CreateAccuracyAssessmentPoints("daycost_standard.tif", "AccuracyPoints.shp", "65", "RANDOM")
+arcpy.gp.CreateAccuracyAssessmentPoints("Day_Final.tif", "AccuracyPoints.shp", "65", "RANDOM")
 
 #Confusion Matrix
 arcpy.gp.ComputeConfusionMatrix("AccuracyPoints.shp", "CMatrix.dbf")
