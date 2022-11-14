@@ -1,1 +1,32 @@
+mport arcpy
+import requests 
+import io
+import os 
+import zipfile
+arcpy.env.workspace = r'G:\My Drive\GIS 5571\Lab3\Lab3\Lab3.gdb'
+working_dir = r'G:\My Drive\GIS 5571\Lab3\Lab3\lab3.gdb'
 
+#ETL 
+
+base_ndawn_url = "https://ndawn.ndsu.nodak.edu/table.csv"
+
+master_param= {
+         "station" : "all"
+         "variable" : "mdavt"
+         "dfn" : "30_day",
+         "year" : "2022" }
+         
+req_response = requests.get(base_ndawn_url, params = master_params)
+
+with open("NameForNewCSVFile.csv" , "w") as newCSV_txt:
+         newCSV_txt.write(req_response.content.decode('utf-8'))
+         
+#Map of Station Points 
+
+#Interpolation 
+
+#IDW 
+
+#TIN
+
+#Kriging
