@@ -168,25 +168,17 @@ output_raster = arcpy.ia.RasterCalculator('(5 * "passable2") + (3* "Farmland3") 
 	(3) Weighting slope as a 5 and rest as 3
 output_raster = arcpy.ia.RasterCalculator('(3 * "passable2") + (3* "Farmland3") + (3* "Water") + (5* "slope__standarized")'); output_raster.save(r"g:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb\cost4")
 
-Cost Surface Method 1
-
-Cost Surface Method 2 
-
 #Cost Distance
 	(1) out_distance_raster = arcpy.sa.CostDistance("cost1", "cost1", None, r"G:\My Drive\GIS 5571\Lab2.3\Backlink1_1", None, None, None, None, ''); out_distance_raster.save(r"G:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb\CostD1_2")
 	(2) out_distance_raster = arcpy.sa.CostDistance("cost2", "cost2", None, r"G:\My Drive\GIS 5571\Lab2.3\Backlink1_2", None, None, None, None, ''); out_distance_raster.save(r"G:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb\CostD1_3")
 	(3) out_distance_raster = arcpy.sa.CostDistance("cost3", "cost3", None, r"G:\My Drive\GIS 5571\Lab2.3\Backlink1_3", None, None, None, None, ''); out_distance_raster.save(r"G:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb\CostD1_4")
-	(4) out_distance_raster = arcpy.sa.CostDistance("cost1.1", "cost1.1", None, r"G:\My Drive\GIS 5571\Lab2.3\Backlink1_11", None, None, None, None, ''); out_distance_raster.save(r"G:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb\CostD1_1")
-	(5) out_distance_raster = arcpy.sa.CostDistance("cost2.1", "cost2.1", None, r"G:\My Drive\GIS 5571\Lab2.3\Backlink2", None, None, None, None, ''); out_distance_raster.save(r"G:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb\CostD2")
 	
 	
 #Cost Path 
 	(1) out_raster = arcpy.sa.CostPath("Extract by Mask Input raster or feature mask data (Points)", "CostD1_2", "Backlink1_1", "EACH_CELL", "IntegerValue", "INPUT_RANGE"); out_raster.save(r"G:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb\CostPath1")
 	(2) out_raster = arcpy.sa.CostPath("Extract by Mask Input raster or feature mask data (Points)", "CostD1_3", "Backlink1_2", "EACH_CELL", "IntegerValue", "INPUT_RANGE"); out_raster.save(r"G:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb\CostPath2")
 	(3) out_raster = arcpy.sa.CostPath("Extract by Mask Input raster or feature mask data (Points)", "CostD1_4", "Backlink1_3", "EACH_CELL", "IntegerValue", "INPUT_RANGE"); out_raster.save(r"G:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb\CostPath3")
-        (4) out_raster = arcpy.sa.CostPath("(Points)", "CostD1_1", "Backlink1_11", "EACH_CELL", "IntegerValue", "INPUT_RANGE"); out_raster.save(r"G:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb\CostPath4")
-	(5) out_raster = arcpy.sa.CostPath("(Points)", "CostD2", "Backlink2", "EACH_CELL", "IntegerValue", "INPUT_RANGE"); out_raster.save(r"G:\My Drive\GIS 5571\Lab2.3\Lab2.3\Lab2.gdb\CostPath5")
-
+       
 
 Start Point **remember to flip when imputing**
 44.127985, -92.148796
