@@ -56,6 +56,95 @@ arcpy.ddd.CreateTin(r"G:\My Drive\GIS 5571\Lab3\Lab3\TIN", 'GEOGCS["GCS_WGS_1984
 
 out_surface_raster = arcpy.sa.Kriging("Points", "Avg_Temp_Month", "Spherical # # # #", 0.0144790399999999, "VARIABLE 12", None); out_surface_raster.save(r"G:\My Drive\GIS 5571\Lab3\Lab3\lab3.gdb\Kriging")
 
+#Accuracy Assessment 
+
+#IDW
+
+#count = 1
+#errors = []
+#predict = []
+#actual = [] 
+#with arcpy.da.SearchCursor(data, ['Latitude', 'Longitude', 'Ave_Temp']) as cursor:
+#    for row in cursor:
+#        count += 1
+#        lat = row[0]
+#        long = row[1]
+#       Avg_temp = row[2]
+        
+#       selection_string = "Latitude <>" + str(lat) + "And Longitude <>" +str(lon)
+#        subset = arcpy.analysis.Select(data, r"G:\My Drive\GIS 5571\Lab3\lab3\lab3.gdb")
+        
+#        idw = arcpy.ga.IDW(subset, "Avg_Temp", "Idw", r"G:\My Drive\GIS 5571\Lab3\lab3\lab3.gdb\Idw_Raster")
+        
+#        loc_str = str(lon) + "" + str(lat)
+#        val = arcpy.management.GetCellValue(r"G:\My Drive\GIS 5571\Lab3\lab3\lab3.gdb\Idw_Raster", loc_str)
+        
+#       predict.append(float(val.getOutput(0)))
+#        actual.append(Avg_Temp)
+#        errors.append(Ave_Temp - float(val.getOutput(0)))
 
 
+#errors_2 = np.square(errors)
+#RMSE= np.mean(errors_2)
+#print(RMSE)
 
+#TIN
+
+#TIN
+#count = 1
+#errors = []
+#predict = []
+#actual = [] 
+#with arcpy.da.SearchCursor(data, ['Latitude', 'Longitude', 'Ave_Temp']) as cursor:
+#    for row in cursor:
+#        count += 1
+#        lat = row[0]
+#        long = row[1]
+#       Avg_temp = row[2]
+        
+#       selection_string = "Latitude <>" + str(lat) + "And Longitude <>" +str(lon)
+#        subset = arcpy.analysis.Select(data, r"G:\My Drive\GIS 5571\Lab3\lab3\lab3.gdb")
+        
+#        idw = arcpy.ga.IDW(subset, "Avg_Temp", "Idw", r"G:\My Drive\GIS 5571\Lab3\lab3\lab3.gdb\TIN_Raster")
+        
+#        loc_str = str(lon) + "" + str(lat)
+#        val = arcpy.management.GetCellValue(r"G:\My Drive\GIS 5571\Lab3\lab3\lab3.gdb\TIN_Raster", loc_str)
+        
+#       predict.append(float(val.getOutput(0)))
+#        actual.append(Avg_Temp)
+#        errors.append(Ave_Temp - float(val.getOutput(0)))
+
+
+#errors_2 = np.square(errors)
+#RMSE= np.mean(errors_2)
+#print(RMSE)
+
+#Kriging 
+
+#count = 1
+#errors = []
+#predict = []
+#actual = [] 
+#with arcpy.da.SearchCursor(data, ['Latitude', 'Longitude', 'Ave_Temp']) as cursor:
+#    for row in cursor:
+#        count += 1
+#        lat = row[0]
+#        long = row[1]
+#       Avg_temp = row[2]
+        
+#       selection_string = "Latitude <>" + str(lat) + "And Longitude <>" +str(lon)
+#        subset = arcpy.analysis.Select(data, r"G:\My Drive\GIS 5571\Lab3\lab3\lab3.gdb")
+        
+#        idw = arcpy.ga.IDW(subset, "Avg_Temp", "Idw", r"G:\My Drive\GIS 5571\Lab3\lab3\lab3.gdb\Krig_Raster")
+        
+#        loc_str = str(lon) + "" + str(lat)
+#        val = arcpy.management.GetCellValue(r"G:\My Drive\GIS 5571\Lab3\lab3\lab3.gdb\Krig_Raster", loc_str)
+        
+#       predict.append(float(val.getOutput(0)))
+#        actual.append(Avg_Temp)
+#        errors.append(Ave_Temp - float(val.getOutput(0)))
+
+
+#errors_2 = np.square(errors)
+#RMSE= np.mean(errors_2)
+#print(RMSE)
